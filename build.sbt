@@ -4,6 +4,8 @@ ThisBuild / organizationName := "io.github.martinhh"
 
 ThisBuild / scalaVersion := "3.3.3"
 
+publish / skip := true
+
 lazy val mqttScalaJs = (project in file("mqtt-scalajs"))
   .enablePlugins(ScalaJSPlugin)
   .enablePlugins(ScalaJSBundlerPlugin)
