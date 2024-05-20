@@ -4,7 +4,7 @@ ThisBuild / organizationName := "io.github.martinhh"
 
 ThisBuild / scalaVersion := "3.3.3"
 
-lazy val root = (project in file("."))
+lazy val mqttScalaJs = (project in file("mqtt-scalajs"))
   .enablePlugins(ScalaJSPlugin)
   .settings(
     name := "mqtt-scalajs"
