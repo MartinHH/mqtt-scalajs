@@ -6,6 +6,9 @@ ThisBuild / scalaVersion := "3.3.3"
 
 lazy val mqttScalaJs = (project in file("mqtt-scalajs"))
   .enablePlugins(ScalaJSPlugin)
+  .enablePlugins(ScalaJSBundlerPlugin)
   .settings(
-    name := "mqtt-scalajs"
+    name := "mqtt-scalajs",
+    libraryDependencies += "org.scalameta" %%% "munit" % "1.0.0-RC1" % Test,
+    Test / npmDependencies += "mqtt" -> "5.6.1"
   )
