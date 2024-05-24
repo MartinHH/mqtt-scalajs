@@ -12,5 +12,7 @@ lazy val mqttScalaJs = (project in file("mqtt-scalajs"))
   .settings(
     name := "mqtt-scalajs",
     libraryDependencies += "org.scalameta" %%% "munit" % "1.0.0-RC1" % Test,
-    Test / npmDependencies += "mqtt" -> "5.6.1"
+    Test / npmDependencies += "mqtt" -> "5.6.1",
+    webpack / version := "5.91.0",
+    startWebpackDevServer / version := "5.0.4"
   )
