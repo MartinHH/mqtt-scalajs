@@ -1,50 +1,12 @@
 package io.github.martinhh.mqtt
 
-import io.github.martinhh.mqtt.packet.*
+import io.github.martinhh.mqtt.packet.IPublishPacket
+import io.github.martinhh.mqtt.packet.Packet
+import io.github.martinhh.mqtt.packet.PartialIDisconnectPacket
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSName
 
-type VoidCallback = js.Function0[Unit]
-
-type OnCloseCallback = VoidCallback
-
-type OnConnectCallback = js.Function1[IConnackPacket, Unit]
-
-type OnDisconnectCallback = js.Function1[IDisconnectPacket, Unit]
-
-type OnErrorCallback = js.Function1[js.Error /* | ErrorWithReasonCode */, Unit]
-
-type OnMessageCallback = js.Function3[String, Buffer, IPublishPacket, Unit]
-
-type OnPacketCallback = js.Function1[Packet, Unit]
-
-type PacketCallback = js.Function2[js.UndefOr[js.Error], js.UndefOr[Packet], Any]
-
-type ClientSubscribeCallback =
-  js.Function2[js.UndefOr[js.Error], js.UndefOr[js.Array[ISubscriptionGrant]], Unit]
-
-type DoneCallback = js.Function1[js.UndefOr[js.Error], Unit]
-
-type StorePutCallback = VoidCallback
-
-sealed trait EventType[S <: String: ValueOf, C <: js.Function] {
-
-  inline def stringId: String = summon[ValueOf[S]].value
-}
-
-object EventType {
-  case object Connect extends EventType["connect", OnConnectCallback]
-  case object Reconnect extends EventType["reconnect", VoidCallback]
-  case object Close extends EventType["close", OnCloseCallback]
-  case object Disconnect extends EventType["disconnect", OnDisconnectCallback]
-  case object Offline extends EventType["offline", OnDisconnectCallback]
-  case object Error extends EventType["error", OnErrorCallback]
-  case object End extends EventType["end", VoidCallback]
-  case object Message extends EventType["message", OnMessageCallback]
-  case object PacketSend extends EventType["packetsend", OnPacketCallback]
-  case object PacketReceive extends EventType["packetreceive", OnPacketCallback]
-}
 
 extension (client: MqttClient) {
   def on[S <: String, C <: js.Function](eventType: EventType[S, C])(callback: C): client.type =
