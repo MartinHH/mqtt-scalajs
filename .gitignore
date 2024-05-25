@@ -3,3 +3,7 @@ target
 */*/target
 .idea
 .bsp
+
+# npm-dependencies are managed by sbt/plugins, so it seems sensible
+# not to commit package-lock.json
+package-lock.json
