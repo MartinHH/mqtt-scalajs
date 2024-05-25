@@ -19,10 +19,9 @@ class ClientSuite extends MQTTSuite {
       _ <- client.subscribeAsync(topic)
       pc <- client.publishAsync(topic, payload)
       received <- promise.future
+      _ <- client.endAsync()
     } yield {
       assertEquals(received, payload)
-      // TODO: endAsync
-      client.end()
     }
   }
 }

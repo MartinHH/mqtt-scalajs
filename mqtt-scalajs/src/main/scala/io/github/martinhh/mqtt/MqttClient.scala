@@ -55,6 +55,11 @@ trait MqttClient {
     cb: UndefOr[DoneCallback] = js.undefined
   ): Unit
 
+  def endAsync(
+    force: UndefOr[Boolean] = js.undefined,
+    opts: UndefOr[PartialDisconnectPacket] = js.undefined
+  ): Future[Unit]
+
   def removeOutgoingMessage(messageId: Int): Unit
 
   def handleMessage(packet: PublishPacket, callback: DoneCallback): Unit
@@ -116,6 +121,22 @@ object MqttClient {
       opts: UndefOr[PartialDisconnectPacket],
       cb: UndefOr[DoneCallback]
     ): Unit = underlying.end(force, opts, cb)
+
+    override def endAsync(
+      force: UndefOr[Boolean],
+      opts: UndefOr[PartialDisconnectPacket]
+    ): Future[Unit] = {
+      val p = scala.concurrent.Promise[Unit]()
+      val doneCallback: DoneCallback = maybeError => {
+        maybeError.fold[Unit] {
+          p.success(())
+        } { e =>
+          p.failure(js.special.wrapAsThrowable(e))
+        }
+      }
+      end(force, opts, doneCallback)
+      p.future
+    }
 
     override def removeOutgoingMessage(messageId: Int): Unit =
       underlying.removeOutgoingMessage(messageId)
