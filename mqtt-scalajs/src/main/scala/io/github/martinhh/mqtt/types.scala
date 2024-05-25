@@ -1,9 +1,9 @@
 package io.github.martinhh.mqtt
 
-import io.github.martinhh.mqtt.packet.IConnackPacket
-import io.github.martinhh.mqtt.packet.IDisconnectPacket
-import io.github.martinhh.mqtt.packet.IPublishPacket
+import io.github.martinhh.mqtt.packet.ConnackPacket
+import io.github.martinhh.mqtt.packet.DisconnectPacket
 import io.github.martinhh.mqtt.packet.Packet
+import io.github.martinhh.mqtt.packet.PublishPacket
 
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.Uint8Array
@@ -22,20 +22,20 @@ type VoidCallback = js.Function0[Unit]
 
 type OnCloseCallback = VoidCallback
 
-type OnConnectCallback = js.Function1[IConnackPacket, Unit]
+type OnConnectCallback = js.Function1[ConnackPacket, Unit]
 
-type OnDisconnectCallback = js.Function1[IDisconnectPacket, Unit]
+type OnDisconnectCallback = js.Function1[DisconnectPacket, Unit]
 
 type OnErrorCallback = js.Function1[js.Error /* | ErrorWithReasonCode */ , Unit]
 
-type OnMessageCallback = js.Function3[String, Buffer, IPublishPacket, Unit]
+type OnMessageCallback = js.Function3[String, Buffer, PublishPacket, Unit]
 
 type OnPacketCallback = js.Function1[Packet, Unit]
 
 type PacketCallback = js.Function2[js.UndefOr[js.Error], js.UndefOr[Packet], Any]
 
 type ClientSubscribeCallback =
-  js.Function2[js.UndefOr[js.Error], js.UndefOr[js.Array[ISubscriptionGrant]], Unit]
+  js.Function2[js.UndefOr[js.Error], js.UndefOr[js.Array[SubscriptionGrant]], Unit]
 
 type DoneCallback = js.Function1[js.UndefOr[js.Error], Unit]
 

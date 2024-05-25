@@ -7,11 +7,20 @@ import scala.scalajs.js
 
 sealed trait Packet extends js.Object
 
-trait IConnackPacket extends Packet
+/**
+ * Corresponds to mqtt-js `IConnackPacket`
+ */
+trait ConnackPacket extends Packet
 
-trait IDisconnectPacket extends Packet
+/**
+ * Corresponds to mqtt-js `IDisconnectPacket`
+ */
+trait DisconnectPacket extends Packet
 
-trait IPublishPacket extends Packet {
+/**
+ * Corresponds to mqtt-js `IPublishPacket`
+ */
+trait PublishPacket extends Packet {
   def dup: Boolean
 
   def payload: String | Buffer
@@ -25,4 +34,7 @@ trait IPublishPacket extends Packet {
   def topic: String
 }
 
-trait PartialIDisconnectPacket extends js.Object
+/**
+ * Corresponds to mqtt-js `Partial<IDisconnectPacket>`
+ */
+trait PartialDisconnectPacket extends js.Object
