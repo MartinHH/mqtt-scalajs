@@ -1,5 +1,12 @@
-package io.github.martinhh.mqtt
+package io.github.martinhh.mqtt.jsnative
 
+import io.github.martinhh.mqtt.Buffer
+import io.github.martinhh.mqtt.ClientSubscribeCallback
+import io.github.martinhh.mqtt.DoneCallback
+import io.github.martinhh.mqtt.IClientPublishOptions
+import io.github.martinhh.mqtt.IClientSubscribeOptions
+import io.github.martinhh.mqtt.ISubscriptionGrant
+import io.github.martinhh.mqtt.PacketCallback
 import io.github.martinhh.mqtt.packet.IPublishPacket
 import io.github.martinhh.mqtt.packet.Packet
 import io.github.martinhh.mqtt.packet.PartialIDisconnectPacket
@@ -7,14 +14,8 @@ import io.github.martinhh.mqtt.packet.PartialIDisconnectPacket
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSName
 
-
-extension (client: MqttClient) {
-  def on[S <: String, C <: js.Function](eventType: EventType[S, C])(callback: C): client.type =
-    client.onUnsafe(eventType.stringId, callback)
-}
-
 @js.native
-trait MqttClient extends js.Object {
+private[mqtt] trait MqttClient extends js.Object {
 
   @JSName("on")
   def onUnsafe[Event <: String](event: Event, callback: js.Function): this.type = js.native
