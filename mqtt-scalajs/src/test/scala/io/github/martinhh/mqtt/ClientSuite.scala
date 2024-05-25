@@ -5,7 +5,7 @@ class ClientSuite extends MQTTSuite {
   test("publish") {
     val connectOptions = ClientOptions(5)
     for {
-      client <- connectAsync(wsBrokerUrl, connectOptions).toFuture
+      client <- connectAsync(wsBrokerUrl, connectOptions)
       topic = "io/github/martinhh/mqtt/test/js"
       promise = {
         val p = scala.concurrent.Promise[String]()
@@ -16,8 +16,8 @@ class ClientSuite extends MQTTSuite {
         p
       }
       payload = "test"
-      _ <- client.subscribeAsync(topic).toFuture
-      pc <- client.publishAsync(topic, payload).toFuture
+      _ <- client.subscribeAsync(topic)
+      pc <- client.publishAsync(topic, payload)
       received <- promise.future
     } yield {
       assertEquals(received, payload)

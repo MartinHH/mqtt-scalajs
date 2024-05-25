@@ -4,6 +4,7 @@ import io.github.martinhh.mqtt.packet.IPublishPacket
 import io.github.martinhh.mqtt.packet.Packet
 import io.github.martinhh.mqtt.packet.PartialIDisconnectPacket
 
+import scala.concurrent.Future
 import scala.scalajs.js
 import scala.scalajs.js.Promise
 import scala.scalajs.js.UndefOr
@@ -21,7 +22,7 @@ trait MqttClient {
     topic: String,
     message: String,
     opts: UndefOr[IClientPublishOptions] = js.undefined
-  ): js.Promise[UndefOr[Packet]]
+  ): Future[UndefOr[Packet]]
 
   def subscribe(
     topicObject: String | js.Array[String],
@@ -32,7 +33,7 @@ trait MqttClient {
   def subscribeAsync(
     topicObject: String | js.Array[String],
     opts: UndefOr[IClientSubscribeOptions] = js.undefined
-  ): js.Promise[js.Array[ISubscriptionGrant]]
+  ): Future[js.Array[ISubscriptionGrant]]
 
   def unsubscribe(
     topic: String | js.Array[String],
@@ -43,7 +44,7 @@ trait MqttClient {
   def unsubscribeAsync(
     topic: String | js.Array[String],
     opts: UndefOr[IClientSubscribeOptions] = js.undefined
-  ): js.Promise[UndefOr[Packet]]
+  ): Future[UndefOr[Packet]]
 
   def connect(): Unit
 
@@ -83,7 +84,7 @@ object MqttClient {
       topic: String,
       message: String,
       opts: UndefOr[IClientPublishOptions]
-    ): Promise[UndefOr[Packet]] = underlying.publishAsync(topic, message, opts)
+    ): Future[UndefOr[Packet]] = underlying.publishAsync(topic, message, opts).toFuture
 
     override def subscribe(
       topicObject: String | js.Array[String],
@@ -94,7 +95,7 @@ object MqttClient {
     override def subscribeAsync(
       topicObject: String | js.Array[String],
       opts: UndefOr[IClientSubscribeOptions]
-    ): Promise[js.Array[ISubscriptionGrant]] = underlying.subscribeAsync(topicObject, opts)
+    ): Future[js.Array[ISubscriptionGrant]] = underlying.subscribeAsync(topicObject, opts).toFuture
 
     override def unsubscribe(
       topic: String | js.Array[String],
@@ -105,7 +106,7 @@ object MqttClient {
     override def unsubscribeAsync(
       topic: String | js.Array[String],
       opts: UndefOr[IClientSubscribeOptions]
-    ): Promise[UndefOr[Packet]] = underlying.unsubscribeAsync(topic, opts)
+    ): Future[UndefOr[Packet]] = underlying.unsubscribeAsync(topic, opts).toFuture
 
     override def connect(): Unit = underlying.connect()
 

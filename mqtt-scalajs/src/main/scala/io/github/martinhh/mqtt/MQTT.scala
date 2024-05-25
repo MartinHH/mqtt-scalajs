@@ -1,5 +1,6 @@
 package io.github.martinhh.mqtt
 
+import scala.concurrent.Future
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 
@@ -30,8 +31,8 @@ inline def connect(brokerUrl: String, opts: js.UndefOr[ClientOptions] = js.undef
 inline def connectAsync(
   brokerUrl: String,
   opts: js.UndefOr[ClientOptions] = js.undefined
-): js.Promise[MqttClient] =
-  MQTT.connectAsync(brokerUrl, opts).`then`(client => MqttClient(client))
+): Future[MqttClient] =
+  MQTT.connectAsync(brokerUrl, opts).`then`(client => MqttClient(client)).toFuture
 
 // TODO:
 //inline def connectAsync(opts: ClientOptions): MqttClient =
