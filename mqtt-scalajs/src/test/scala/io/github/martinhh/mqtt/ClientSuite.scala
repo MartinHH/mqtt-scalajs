@@ -1,23 +1,26 @@
 package io.github.martinhh.mqtt
 
-class ClientSuite extends MQTTSuite {
+abstract class ClientSuite(protocolVersion: ProtocolVersion) extends MQTTSuite {
 
-  test("publish") {
-    val connectOptions = ClientOptions(5)
-    for {
-      client <- connectAsync(wsBrokerUrl, connectOptions)
-      topic = "io/github/martinhh/mqtt/test/js"
-      promise = {
-        val p = scala.concurrent.Promise[String]()
-        client.on(EventType.Message) { (t, buffer, _) =>
-          assertEquals(t, topic)
-          p.success(buffer.toString)
-        }
-        p
+  protected val defaultClient: FunFixture[MqttClient] = FunFixture.async(
+    setup = _ => connectAsync(wsBrokerUrl, ClientOptions(protocolVersion)),
+    teardown = _.endAsync()
+  )
+
+  defaultClient.test("publish") { client =>
+    val topic = s"io/github/martinhh/mqttv$protocolVersion/test/js"
+    val promise = {
+      val p = scala.concurrent.Promise[String]()
+      client.on(EventType.Message) { (t, buffer, _) =>
+        assertEquals(t, topic)
+        p.success(buffer.toString)
       }
-      payload = "test"
+      p
+    }
+    val payload = "test"
+    for {
       _ <- client.subscribeAsync(topic)
-      pc <- client.publishAsync(topic, payload)
+      _ <- client.publishAsync(topic, payload)
       received <- promise.future
       _ <- client.endAsync()
     } yield {
