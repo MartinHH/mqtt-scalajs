@@ -17,7 +17,6 @@ type QoS = 0 | 1 | 2
 
 opaque type Buffer <: Uint8Array = Uint8Array
 
-
 type VoidCallback = js.Function0[Unit]
 
 type OnCloseCallback = VoidCallback
