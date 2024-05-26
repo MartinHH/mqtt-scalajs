@@ -25,7 +25,7 @@ type OnConnectCallback = js.Function1[ConnackPacket, Unit]
 
 type OnDisconnectCallback = js.Function1[DisconnectPacket, Unit]
 
-type OnErrorCallback = js.Function1[js.Error /* | ErrorWithReasonCode */ , Unit]
+type OnErrorCallback = js.Function1[js.Error /* | ErrorWithReasonCode */, Unit]
 
 type OnMessageCallback = js.Function3[String, Buffer, PublishPacket, Unit]
 
