@@ -9,9 +9,16 @@ import scala.concurrent.ExecutionContext
  */
 trait TestBrokerConfig {
 
+  private def getEnvVar(key: String): Option[String] = {
+    val env = scala.scalajs.js.Dynamic.global.process.env
+    env.selectDynamic(key).asInstanceOf[scala.scalajs.js.UndefOr[String]].toOption
+  }
+
+  protected def brokerHostFromEnv: Option[String] = getEnvVar("TEST_BROKER_HOST")
+
   protected def wsBrokerPort: Int = 9001
 
-  protected def brokerHost: String = "localhost"
+  protected def brokerHost: String = brokerHostFromEnv.getOrElse("localhost")
 
   protected def wsBrokerUrl: String = s"ws://$brokerHost:$wsBrokerPort/"
 
