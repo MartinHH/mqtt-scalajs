@@ -16,7 +16,7 @@ trait TestBrokerConfig {
 
   protected def brokerHostFromEnv: Option[String] = getEnvVar("TEST_BROKER_HOST")
 
-  protected def wsBrokerPort: Int = 9001
+  protected def wsBrokerPort: Int = 8083
 
   protected def brokerHost: String = brokerHostFromEnv.getOrElse("localhost")
 
