@@ -25,7 +25,7 @@ trait PublishPacket extends Packet {
 
   def payload: String | Buffer
 
-  def properties: js.UndefOr[CorrelationData] = js.undefined
+  def properties: js.UndefOr[Mqtt5Properties] = js.undefined
 
   def qos: QoS
 

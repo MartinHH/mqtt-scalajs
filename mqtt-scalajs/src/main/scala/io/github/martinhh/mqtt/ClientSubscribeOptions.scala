@@ -11,7 +11,7 @@ trait ReasonString extends js.Object {
  */
 trait ClientSubscribeProperties extends js.Object {
 
-  var properties: js.UndefOr[ReasonString] = js.undefined
+  def properties: js.UndefOr[ReasonString] = js.undefined
 }
 
 /**

@@ -19,7 +19,7 @@ trait MqttClient {
 
   def publishAsync(
     topic: String,
-    message: String,
+    message: String | Buffer,
     opts: UndefOr[ClientPublishOptions] = js.undefined
   ): Future[UndefOr[Packet]]
 
@@ -86,7 +86,7 @@ object MqttClient {
 
     override def publishAsync(
       topic: String,
-      message: String,
+      message: String | Buffer,
       opts: UndefOr[ClientPublishOptions]
     ): Future[UndefOr[Packet]] = underlying.publishAsync(topic, message, opts).toFuture
 
