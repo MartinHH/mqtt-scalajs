@@ -29,7 +29,7 @@ private[mqtt] trait MqttClient extends js.Object {
 
   def publishAsync(
     topic: String,
-    message: String,
+    message: String | Buffer,
     opts: js.UndefOr[ClientPublishOptions] = js.undefined
   ): js.Promise[js.UndefOr[Packet]] = js.native
 
