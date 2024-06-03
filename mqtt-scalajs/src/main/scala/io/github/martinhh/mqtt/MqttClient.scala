@@ -1,5 +1,6 @@
 package io.github.martinhh.mqtt
 
+import io.github.martinhh.mqtt.buffer.Buffer
 import io.github.martinhh.mqtt.packet.PublishPacket
 import io.github.martinhh.mqtt.packet.Packet
 import io.github.martinhh.mqtt.packet.PartialDisconnectPacket

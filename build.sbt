@@ -6,6 +6,8 @@ ThisBuild / scalaVersion := "3.3.1"
 
 publish / skip := true
 
+val mUnitVersion = "1.0.0"
+
 lazy val mqttScalaJs = (project in file("mqtt-scalajs"))
   .enablePlugins(ScalaJSPlugin)
   .settings(
@@ -19,7 +21,12 @@ lazy val tests = (project in file("tests"))
   .enablePlugins(ScalaJSBundlerPlugin)
   .settings(
     name := "tests",
-    libraryDependencies += "org.scalameta" %%% "munit" % "1.0.0" % Test,
+    libraryDependencies ++= Seq(
+      "org.scalameta" %%% "munit" % mUnitVersion % Test,
+      "org.scalameta" %%% "munit-scalacheck" % mUnitVersion % Test,
+      // used as reference implementation for Buffer facade:
+      ("org.scommons.nodejs" %%% "scommons-nodejs-core" % "1.0.0").cross(CrossVersion.for3Use2_13) % Test
+    ),
     Test / npmDependencies += "mqtt" -> "5.6.1",
     webpack / version := "5.91.0",
     startWebpackDevServer / version := "5.0.4",

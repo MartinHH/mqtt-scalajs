@@ -1,6 +1,6 @@
 package io.github.martinhh.mqtt.packet
 
-import io.github.martinhh.mqtt.Buffer
+import io.github.martinhh.mqtt.buffer.Buffer
 
 import scala.scalajs.js
 
