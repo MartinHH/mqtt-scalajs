@@ -1,6 +1,6 @@
 package io.github.martinhh.mqtt.jsnative
 
-import io.github.martinhh.mqtt.Buffer
+import io.github.martinhh.mqtt.buffer.Buffer
 import io.github.martinhh.mqtt.ClientSubscribeCallback
 import io.github.martinhh.mqtt.DoneCallback
 import io.github.martinhh.mqtt.ClientPublishOptions
