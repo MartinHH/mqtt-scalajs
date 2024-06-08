@@ -11,7 +11,12 @@ import scala.scalajs.js.UndefOr
 abstract class ClientSuite(protocolVersion: ProtocolVersion) extends MQTTSuite {
 
   protected val defaultClient: FunFixture[MqttClient] = FunFixture.async(
-    setup = _ => connectAsync(wsBrokerUrl, ClientOptions(protocolVersion)),
+    setup = _ => connectAsync(defaultHostClientOptions(protocolVersion)),
+    teardown = _.endAsync()
+  )
+
+  protected val defaultClientViaUrlString: FunFixture[MqttClient] = FunFixture.async(
+    setup = _ => connectAsync(wsBrokerUrl, ClientOptions(protocolVersion = protocolVersion)),
     teardown = _.endAsync()
   )
 
@@ -47,6 +52,14 @@ abstract class ClientSuite(protocolVersion: ProtocolVersion) extends MQTTSuite {
     testSubPubOneMessageNonRetained(client)()(payload) { packet =>
       assertEquals(packet.payload.toString, payload)
     }
+  }
+
+  defaultClientViaUrlString.test("basic publish and subscribe (connected using url-string)") {
+    client =>
+      val payload = "test"
+      testSubPubOneMessageNonRetained(client)()(payload) { packet =>
+        assertEquals(packet.payload.toString, payload)
+      }
   }
 
 }
