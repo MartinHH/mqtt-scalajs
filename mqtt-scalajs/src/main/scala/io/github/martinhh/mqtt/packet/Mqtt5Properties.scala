@@ -4,14 +4,14 @@ import io.github.martinhh.mqtt.buffer.Buffer
 
 import scala.scalajs.js
 
-trait Mqtt5Properties extends js.Object {
-  def contentType: js.UndefOr[String] = js.undefined
+sealed trait Mqtt5Properties extends js.Object {
+  def contentType: js.UndefOr[String]
 
-  def correlationData: js.UndefOr[Buffer] = js.undefined
+  def correlationData: js.UndefOr[Buffer]
 
-  def payloadFormatIndicator: js.UndefOr[Boolean] = js.undefined
+  def payloadFormatIndicator: js.UndefOr[Boolean]
 
-  def responseTopic: js.UndefOr[String] = js.undefined
+  def responseTopic: js.UndefOr[String]
 
   // TODO: there are more members...
 }
@@ -23,13 +23,22 @@ object Mqtt5Properties {
     correlationData: js.UndefOr[Buffer] = js.undefined,
     payloadFormatIndicator: js.UndefOr[Boolean] = js.undefined,
     responseTopic: js.UndefOr[String] = js.undefined
-  ): Mqtt5Properties =
-    ImmutableMqtt5Properties(contentType, correlationData, payloadFormatIndicator, responseTopic)
+  ): Mqtt5Properties = {
+    val props = new MutableMqtt5Properties {}
+    contentType.foreach(_ => props.contentType = contentType)
+    correlationData.foreach(_ => props.correlationData = correlationData)
+    payloadFormatIndicator.foreach(_ => props.payloadFormatIndicator = payloadFormatIndicator)
+    responseTopic.foreach(_ => props.responseTopic = responseTopic)
+    props
+  }
+}
 
-  private class ImmutableMqtt5Properties(
-    override val contentType: js.UndefOr[String],
-    override val correlationData: js.UndefOr[Buffer],
-    override val payloadFormatIndicator: js.UndefOr[Boolean],
-    override val responseTopic: js.UndefOr[String]
-  ) extends Mqtt5Properties
+trait MutableMqtt5Properties extends Mqtt5Properties {
+  var contentType: js.UndefOr[String] = js.undefined
+
+  var correlationData: js.UndefOr[Buffer] = js.undefined
+
+  var payloadFormatIndicator: js.UndefOr[Boolean] = js.undefined
+
+  var responseTopic: js.UndefOr[String] = js.undefined
 }
