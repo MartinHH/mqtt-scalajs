@@ -10,6 +10,16 @@ import scala.scalajs.js.UndefOr
 
 abstract class ClientSuite(protocolVersion: ProtocolVersion) extends MQTTSuite {
 
+  protected def firstMessageAsFuture(client: MqttClient): Future[PublishPacket] = {
+    val p = scala.concurrent.Promise[PublishPacket]()
+    client.on(EventType.Message) { (t, buffer, packet) =>
+      assertEquals(t, packet.topic)
+      assertEquals(buffer, packet.payload)
+      assert(p.trySuccess(packet))
+    }
+    p.future
+  }
+
   protected val defaultClient: FunFixture[MqttClient] = FunFixture.async(
     setup = _ => connectAsync(defaultHostClientOptions(protocolVersion)),
     teardown = _.endAsync()
@@ -28,16 +38,7 @@ abstract class ClientSuite(protocolVersion: ProtocolVersion) extends MQTTSuite {
   )(message: String | Buffer, pubOpts: UndefOr[ClientPublishOptions] = js.undefined)(
     check: PublishPacket => Unit
   )(using Location): Unit =
-    val received: Future[PublishPacket] = {
-      val p = scala.concurrent.Promise[PublishPacket]()
-      client.on(EventType.Message) { (t, buffer, packet) =>
-        assertEquals(t, topic)
-        assertEquals(t, packet.topic)
-        assertEquals(buffer, packet.payload)
-        p.trySuccess(packet)
-      }
-      p.future
-    }
+    val received: Future[PublishPacket] = firstMessageAsFuture(client)
     for {
       _ <- client.subscribeAsync(topic)
       _ <- client.publishAsync(topic, message, pubOpts)
@@ -51,6 +52,7 @@ abstract class ClientSuite(protocolVersion: ProtocolVersion) extends MQTTSuite {
     val payload = "test"
     testSubPubOneMessageNonRetained(client)()(payload) { packet =>
       assertEquals(packet.payload.toString, payload)
+      assertEquals(packet.topic, defaultTopic)
     }
   }
 
@@ -59,7 +61,22 @@ abstract class ClientSuite(protocolVersion: ProtocolVersion) extends MQTTSuite {
       val payload = "test"
       testSubPubOneMessageNonRetained(client)()(payload) { packet =>
         assertEquals(packet.payload.toString, payload)
+        assertEquals(packet.topic, defaultTopic)
       }
+  }
+
+  defaultClient.test("subscribe after publish retained") { client =>
+    val payload = "test"
+    val topic: String = defaultTopic
+    val received: Future[PublishPacket] = firstMessageAsFuture(client)
+    for {
+      _ <- client.publishAsync(topic, payload, ClientPublishOptions(retain = true))
+      _ <- client.subscribeAsync(topic)
+      receivedPacket <- received
+      _ <- client.endAsync()
+    } yield {
+      assert(receivedPacket.retain)
+    }
   }
 
 }
