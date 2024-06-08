@@ -14,9 +14,19 @@ private object MQTT extends js.Object {
   ): jsnative.MqttClient =
     js.native
 
+  def connect(
+    opts: ClientOptions
+  ): jsnative.MqttClient =
+    js.native
+
   def connectAsync(
     brokerUrl: String,
     opts: js.UndefOr[ClientOptions] = js.undefined
+  ): js.Promise[jsnative.MqttClient] =
+    js.native
+
+  def connectAsync(
+    opts: ClientOptions
   ): js.Promise[jsnative.MqttClient] =
     js.native
 }
@@ -24,9 +34,8 @@ private object MQTT extends js.Object {
 inline def connect(brokerUrl: String, opts: js.UndefOr[ClientOptions] = js.undefined): MqttClient =
   MqttClient(MQTT.connect(brokerUrl, opts))
 
-// TODO:
-//inline def connect(opts: ClientOptions): MqttClient =
-//    MQTT.connect(opts)
+inline def connect(opts: ClientOptions): MqttClient =
+  MqttClient(MQTT.connect(opts))
 
 inline def connectAsync(
   brokerUrl: String,
@@ -34,6 +43,5 @@ inline def connectAsync(
 ): Future[MqttClient] =
   MQTT.connectAsync(brokerUrl, opts).`then`(client => MqttClient(client)).toFuture
 
-// TODO:
-//inline def connectAsync(opts: ClientOptions): MqttClient =
-//    MQTT.connectAsync(opts)
+inline def connectAsync(opts: ClientOptions): Future[MqttClient] =
+  MQTT.connectAsync(opts).`then`(client => MqttClient(client)).toFuture

@@ -1,6 +1,7 @@
 package io.github.martinhh.mqtt
 
 import scala.concurrent.ExecutionContext
+import scala.scalajs.js
 
 /**
  * Config of the broker used for testing.
@@ -10,8 +11,8 @@ import scala.concurrent.ExecutionContext
 trait TestBrokerConfig {
 
   private def getEnvVar(key: String): Option[String] = {
-    val env = scala.scalajs.js.Dynamic.global.process.env
-    env.selectDynamic(key).asInstanceOf[scala.scalajs.js.UndefOr[String]].toOption
+    val env = js.Dynamic.global.process.env
+    env.selectDynamic(key).asInstanceOf[js.UndefOr[String]].toOption
   }
 
   protected def brokerHostFromEnv: Option[String] = getEnvVar("TEST_BROKER_HOST")
@@ -21,6 +22,15 @@ trait TestBrokerConfig {
   protected def brokerHost: String = brokerHostFromEnv.getOrElse("localhost")
 
   protected def wsBrokerUrl: String = s"ws://$brokerHost:$wsBrokerPort/"
+
+  protected def defaultHostClientOptions(protocolVersion: ProtocolVersion): ClientOptions = {
+    ClientOptions(
+      host = brokerHost,
+      port = wsBrokerPort,
+      protocolVersion = protocolVersion,
+      protocol = "ws"
+    )
+  }
 
 }
 
