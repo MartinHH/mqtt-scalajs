@@ -7,7 +7,6 @@ import org.scalacheck.Gen
 import scommons.nodejs
 import org.scalacheck.Prop
 
-
 class BufferSuite extends munit.ScalaCheckSuite {
 
   test("Buffer is scommons.nodejs.Buffer") {
