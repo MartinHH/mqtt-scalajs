@@ -6,7 +6,7 @@ ThisBuild / scalaVersion := "3.3.1"
 
 publish / skip := true
 
-val mUnitVersion = "1.0.0"
+val mUnitVersion = "1.1.0"
 
 lazy val mqttScalaJs = (project in file("mqtt-scalajs"))
   .enablePlugins(ScalaJSPlugin)
@@ -24,6 +24,7 @@ lazy val tests = (project in file("tests"))
     libraryDependencies ++= Seq(
       "org.scalameta" %%% "munit" % mUnitVersion % Test,
       "org.scalameta" %%% "munit-scalacheck" % mUnitVersion % Test,
+      "io.github.martinhh" %%% "scalacheck-derived-extras" % "0.6.0" % Test,
       // used as reference implementation for Buffer facade:
       ("org.scommons.nodejs" %%% "scommons-nodejs-core" % "1.0.0").cross(CrossVersion.for3Use2_13) % Test
     ),
