@@ -1,22 +1,13 @@
 package io.github.martinhh.mqtt.buffer
 
+import io.github.martinhh.derived.extras.literal.arbitrary.given
+import io.github.martinhh.derived.extras.union.scalacheck.given
 import org.scalacheck.Arbitrary
 import org.scalacheck.Gen
 import scommons.nodejs
 import org.scalacheck.Prop
 
-object BufferSuite {
-  val genUtfEncoding: Gen[Buffer.Encoding] =
-    Gen.oneOf(
-      Seq[Buffer.Encoding](
-        "utf16le",
-        "utf8"
-      )
-    )
-}
-
 class BufferSuite extends munit.ScalaCheckSuite {
-  import BufferSuite.*
 
   test("Buffer is scommons.nodejs.Buffer") {
     assert(scommons.nodejs.Buffer.isBuffer(Buffer.from("foo")))
@@ -33,7 +24,7 @@ class BufferSuite extends munit.ScalaCheckSuite {
   }
 
   property("from(x: String, encoding).toString(encoding) === x (for all utf-encodings)") {
-    Prop.forAll(Arbitrary.arbitrary[String], genUtfEncoding) {
+    Prop.forAll(Arbitrary.arbitrary[String], Arbitrary.arbitrary["utf16le" | "utf8"]) {
       (x: String, encoding: Buffer.Encoding) =>
         assertEquals(Buffer.from(x, encoding).toString(encoding), x)
     }
